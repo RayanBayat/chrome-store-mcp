@@ -4,3 +4,4 @@ coverage/
 *.log
 client_secret*.json
 .env
+*.tgz

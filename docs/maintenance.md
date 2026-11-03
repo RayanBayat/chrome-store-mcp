@@ -51,9 +51,10 @@ The rule: **every package is on its latest version**, unless there is a written 
 
 1. For each package in the report: `npm install --save-exact <package>@latest` (add `--save-dev` for dev tools).
 2. Run `npm run verify`. If an update breaks something you cannot fix now, roll it back and add the package to
-   `maintenance/held-back.json` with the version you judged (`latestSeen`) and the reason. The check stays quiet about
-   it until an even newer version appears.
-3. Read every entry already in `maintenance/held-back.json` (including `overrides`). Remove the ones whose reason is gone.
+   `maintenance/held-back.json` with the version you judged (`latestSeen`) and the reason, and add an `ignore` entry
+   for its major updates in `.github/dependabot.yml`. The check stays quiet about it until an even newer version appears.
+3. Read every entry already in `maintenance/held-back.json` (including `overrides`). Remove the ones whose reason is gone,
+   together with the matching `ignore` entry in `.github/dependabot.yml` (a test checks that the two lists match).
 4. `npm audit` must report 0 vulnerabilities. If a fix needs an `overrides` entry in `package.json`, record it in
    `held-back.json` too.
 

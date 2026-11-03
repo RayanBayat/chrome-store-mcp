@@ -12,29 +12,28 @@ new versions. Every change that reaches your users asks a human first.
 
 ## Quick install
 
-You need Node.js 22.18 or newer. It runs the TypeScript source directly, so there is no build step.
+You need Node.js 22.18 or newer and Git. There is nothing to download by hand: `npx` fetches the server from GitHub,
+builds it and runs it.
 
-1. Download the code and install the two runtime packages:
-
-   ```
-   git clone https://github.com/RayanBayat/chrome-store-mcp.git
-   ```
+1. Get an OAuth client file from Google Cloud (see [Set up Google Cloud](#set-up-google-cloud) below), then sign in once:
 
    ```
-   cd chrome-store-mcp && npm ci --omit=dev --ignore-scripts
+   npx -y github:RayanBayat/chrome-store-mcp login /path/to/client_secret.json
    ```
 
-2. Get an OAuth client file from Google Cloud (see [Set up Google Cloud](#set-up-google-cloud) below), then sign in:
+   Want the write tools too (upload, publish, rollback)? Run it once more with `login --write`.
+
+2. Add the server to Claude Code:
 
    ```
-   node src/index.ts login /path/to/client_secret.json
+   claude mcp add chrome-store --scope user -e CWS_PUBLISHER_ID=<publisher id> -e CWS_ITEM_ID=<item id> -- npx -y github:RayanBayat/chrome-store-mcp
    ```
 
-3. Register the server with Claude Code:
-
-   ```
-   claude mcp add --scope user chrome-store -e CWS_PUBLISHER_ID=<publisher id> -e CWS_ITEM_ID=<item id> -- node /path/to/chrome-store-mcp/src/index.ts
-   ```
+That is all. The first start takes longer because `npx` downloads and builds the server; later starts reuse it.
+It follows the `main` branch, so you get new commits automatically; every commit on `main` has passed CI. Its
+dependencies, including indirect ones, are locked to exact versions (`npm-shrinkwrap.json`). To review updates before
+you take them, stay on one commit by adding `#<commit>` after the repository name, for example
+`github:RayanBayat/chrome-store-mcp#35e4f8c`.
 
 For another MCP client, put this in its settings:
 
@@ -42,8 +41,8 @@ For another MCP client, put this in its settings:
 {
   "mcpServers": {
     "chrome-store": {
-      "command": "node",
-      "args": ["/path/to/chrome-store-mcp/src/index.ts"],
+      "command": "npx",
+      "args": ["-y", "github:RayanBayat/chrome-store-mcp"],
       "env": {
         "CWS_PUBLISHER_ID": "<publisher id>",
         "CWS_ITEM_ID": "<item id>"
@@ -53,7 +52,14 @@ For another MCP client, put this in its settings:
 }
 ```
 
-An npm package (so that `npx` works) is planned but not published yet.
+### From a clone (to read or change the code)
+
+```
+git clone https://github.com/RayanBayat/chrome-store-mcp.git && cd chrome-store-mcp && npm ci --ignore-scripts
+```
+
+Then run `node src/index.ts` instead of `npx -y github:RayanBayat/chrome-store-mcp`. Node 22.18 and newer run the
+TypeScript source directly, so there is no build step.
 
 ## What it can do
 
@@ -109,11 +115,11 @@ standard way to let a program act for your Google account without knowing your p
 7. Sign in. Each command opens Google's consent page in your browser:
 
    ```
-   node src/index.ts login /path/to/client_secret.json
+   npx -y github:RayanBayat/chrome-store-mcp login /path/to/client_secret.json
    ```
 
    ```
-   node src/index.ts login --write /path/to/client_secret.json
+   npx -y github:RayanBayat/chrome-store-mcp login --write /path/to/client_secret.json
    ```
 
    The second command is only needed for the write tools.
@@ -157,7 +163,7 @@ On macOS and Windows, use environment variables. A backend for the macOS Keychai
 not built yet. Contributions are welcome. If `login` finds no keyring, it prints the values to set as environment
 variables.
 
-To sign out, run `node src/index.ts logout` or `node src/index.ts logout --write`. This revokes the token at Google and
+To sign out, run `npx -y github:RayanBayat/chrome-store-mcp logout` (add `--write` for the write sign-in). This revokes the token at Google and
 removes it from the keyring. If you used environment variables, remove them from your settings too.
 
 ## Confirmation
@@ -200,7 +206,7 @@ A wrong value stops the server at start-up with a clear message.
 | `chrome-store-mcp --help`                        | Shows the usage                                   |
 | `chrome-store-mcp --version`                     | Shows the version                                 |
 
-From a clone, write `node src/index.ts` instead of `chrome-store-mcp`.
+Run each command as `npx -y github:RayanBayat/chrome-store-mcp <command>`, or from a clone as `node src/index.ts <command>`.
 
 ## Safety in short
 
@@ -240,7 +246,7 @@ telemetry and talks only to Google endpoints. I still chose to write a different
 - Its listing tools drive the real dashboard with Playwright and keep a full Google account session on disk in
   `~/.cws-mcp-profile`.
 - Its upload reads any file path.
-- Its setup runs `npx -y` with caret version ranges, so every start can install a newer version.
+- Its setup runs `npx -y cws-mcp` and it ships no lockfile, so every start can install newer versions of it and of its dependencies.
 
 If you want listing edits through a browser, that package does something this one does not. This server does less on
 purpose.
@@ -252,7 +258,7 @@ purpose.
 | `@modelcontextprotocol/sdk` | 1.32.2  | Runtime. The official MCP SDK.  |
 | `zod`                       | 4.6.7   | Runtime. Checks tool arguments. |
 
-Both are pinned to an exact version and the lockfile is committed. With transitive packages there are about 95
+Both are pinned to an exact version, and `npm-shrinkwrap.json` locks every indirect dependency, also for npx installs. With transitive packages there are about 95
 packages. `npm audit --omit=dev` reported 0 vulnerabilities on 2026-11-03.
 
 I used the official SDK instead of writing the protocol layer by hand, so new MCP protocol versions arrive as SDK

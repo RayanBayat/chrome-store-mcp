@@ -41,6 +41,17 @@ describe('API surface snapshot', () => {
   });
 });
 
+describe('held-back packages', () => {
+  it('each one is ignored for major updates in .github/dependabot.yml, and nothing else is', async () => {
+    const heldBack = JSON.parse(await readFile(new URL('../maintenance/held-back.json', import.meta.url), 'utf8')) as {
+      packages: Record<string, unknown>;
+    };
+    const dependabot = await readFile(new URL('../.github/dependabot.yml', import.meta.url), 'utf8');
+    const ignored = [...dependabot.matchAll(/- dependency-name: '?([^'\n]+)'?/g)].map((match) => match[1]);
+    assert.deepEqual(ignored.sort(), Object.keys(heldBack.packages).sort());
+  });
+});
+
 describe('maintenance script helpers', () => {
   const method = (id: string, httpMethod = 'GET'): ApiSurface['methods'][number] => ({ id, httpMethod, path: `v2/${id}`, scopes: [] });
 

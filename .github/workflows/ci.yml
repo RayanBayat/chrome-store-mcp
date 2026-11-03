@@ -32,3 +32,10 @@ jobs:
           cache: npm
       - run: npm ci --ignore-scripts
       - run: npm run verify
+      # The way users install it (npx from GitHub) runs the `prepare` build and the packed files only.
+      # Pack it, install the package in a clean folder, and start it, so a broken package never reaches main.
+      - name: Smoke-test the packed package
+        run: |
+          npm pack --silent
+          mkdir -p ../smoke && cd ../smoke
+          npm exec --yes --package="$OLDPWD/$(ls "$OLDPWD" | grep '^chrome-store-mcp-.*\.tgz$')" -- chrome-store-mcp --version

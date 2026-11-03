@@ -25,6 +25,7 @@
   },
   "files": [
     "dist",
+    "npm-shrinkwrap.json",
     "README.md",
     "LICENSE"
   ],
@@ -43,7 +44,7 @@
     "test:coverage": "node --test --experimental-test-coverage \"test/**/*.test.ts\"",
     "verify": "npm run lint && npm run format:check && npm run typecheck && npm test && npm run build",
     "maintenance": "node scripts/maintenance.ts",
-    "prepack": "npm run build"
+    "prepare": "tsc -p tsconfig.build.json"
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "1.32.2",

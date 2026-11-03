@@ -1,4 +1,7 @@
 # Weekly pull requests that bump npm packages and GitHub Actions to their latest versions.
+# Packages held back on purpose are listed in maintenance/held-back.json with the reason; their blocked major
+# versions are ignored here so Dependabot does not open pull requests that cannot pass. When a hold is lifted,
+# remove its `ignore` entry too (test/api-surface.test.ts checks that the two lists match).
 version: 2
 updates:
   - package-ecosystem: npm
@@ -10,6 +13,11 @@ updates:
         dependency-type: production
       development:
         dependency-type: development
+    ignore:
+      - dependency-name: typescript
+        update-types: ['version-update:semver-major']
+      - dependency-name: '@types/node'
+        update-types: ['version-update:semver-major']
   - package-ecosystem: github-actions
     directory: /
     schedule:
