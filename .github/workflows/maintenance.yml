@@ -1,0 +1,50 @@
+name: Monthly maintenance check
+
+# Runs `npm run maintenance` on the 1st of every month (and on demand). When something needs attention (a new or
+# removed Google API method, an outdated package, a vulnerability, a new Node.js LTS line, or an overdue review), it
+# opens an issue, or adds a comment to the open one, with the report. docs/maintenance.md explains what to do.
+
+on:
+  schedule:
+    - cron: '17 6 1 * *'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+concurrency:
+  group: maintenance
+  cancel-in-progress: false
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci --ignore-scripts
+      - id: check
+        run: |
+          set +e
+          npm run --silent maintenance -- --report report.md
+          echo "status=$?" >> "$GITHUB_OUTPUT"
+      - name: Open or update the maintenance issue
+        if: steps.check.outputs.status != '0'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          title="Monthly maintenance review"
+          number="$(gh issue list --state open --search "$title in:title" --json number --jq '.[0].number')"
+          if [ -n "$number" ]; then
+            gh issue comment "$number" --body-file report.md
+          else
+            gh issue create --title "$title" --body-file report.md
+          fi

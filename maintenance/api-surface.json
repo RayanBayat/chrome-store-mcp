@@ -1,0 +1,61 @@
+{
+  "_comment": "Snapshot of the Chrome Web Store API v2 methods, from Google's API description. `npm run maintenance` compares it with the live description; `npm run maintenance -- --record` rewrites it after a review.",
+  "source": "https://chromewebstore.googleapis.com/$discovery/rest?version=v2",
+  "revision": "20261101",
+  "methods": [
+    {
+      "id": "chromewebstore.media.upload",
+      "httpMethod": "POST",
+      "path": "v2/publishers/{publishersId}/items/{itemsId}:upload",
+      "scopes": ["https://www.googleapis.com/auth/chromewebstore"]
+    },
+    {
+      "id": "chromewebstore.publishers.items.cancelSubmission",
+      "httpMethod": "POST",
+      "path": "v2/publishers/{publishersId}/items/{itemsId}:cancelSubmission",
+      "scopes": ["https://www.googleapis.com/auth/chromewebstore"]
+    },
+    {
+      "id": "chromewebstore.publishers.items.fetchReviews",
+      "httpMethod": "GET",
+      "path": "v2/publishers/{publishersId}/items/{itemsId}:fetchReviews",
+      "scopes": ["https://www.googleapis.com/auth/chromewebstore", "https://www.googleapis.com/auth/chromewebstore.readonly"]
+    },
+    {
+      "id": "chromewebstore.publishers.items.fetchStatus",
+      "httpMethod": "GET",
+      "path": "v2/publishers/{publishersId}/items/{itemsId}:fetchStatus",
+      "scopes": ["https://www.googleapis.com/auth/chromewebstore", "https://www.googleapis.com/auth/chromewebstore.readonly"]
+    },
+    {
+      "id": "chromewebstore.publishers.items.getRatingSummary",
+      "httpMethod": "GET",
+      "path": "v2/publishers/{publishersId}/items/{itemsId}/ratingSummary",
+      "scopes": ["https://www.googleapis.com/auth/chromewebstore", "https://www.googleapis.com/auth/chromewebstore.readonly"]
+    },
+    {
+      "id": "chromewebstore.publishers.items.publish",
+      "httpMethod": "POST",
+      "path": "v2/publishers/{publishersId}/items/{itemsId}:publish",
+      "scopes": ["https://www.googleapis.com/auth/chromewebstore"]
+    },
+    {
+      "id": "chromewebstore.publishers.items.queryMetrics",
+      "httpMethod": "GET",
+      "path": "v2/publishers/{publishersId}/items/{itemsId}:queryMetrics",
+      "scopes": ["https://www.googleapis.com/auth/chromewebstore", "https://www.googleapis.com/auth/chromewebstore.readonly"]
+    },
+    {
+      "id": "chromewebstore.publishers.items.rollback",
+      "httpMethod": "POST",
+      "path": "v2/publishers/{publishersId}/items/{itemsId}:rollback",
+      "scopes": ["https://www.googleapis.com/auth/chromewebstore"]
+    },
+    {
+      "id": "chromewebstore.publishers.items.setPublishedDeployPercentage",
+      "httpMethod": "POST",
+      "path": "v2/publishers/{publishersId}/items/{itemsId}:setPublishedDeployPercentage",
+      "scopes": ["https://www.googleapis.com/auth/chromewebstore"]
+    }
+  ]
+}

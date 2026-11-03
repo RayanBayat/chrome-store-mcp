@@ -1,0 +1,24 @@
+{
+  "_comment": "Packages deliberately not on their latest version, and npm overrides, each with the reason. `npm run maintenance` stays quiet about a held-back package until a version newer than `latestSeen` appears. Review this list every month (docs/maintenance.md).",
+  "packages": {
+    "typescript": {
+      "heldAt": "6.0.3",
+      "latestSeen": "7.0.2",
+      "reason": "typescript-eslint 8.72.1 (the TypeScript linter) supports TypeScript >=4.8.4 <6.1.0. Move to 7 when typescript-eslint supports it.",
+      "since": "2026-11-03"
+    },
+    "@types/node": {
+      "heldAt": "22.20.5",
+      "latestSeen": "26.6.6",
+      "reason": "Must match the oldest supported Node.js (22). Newer types would let code use APIs that Node 22 does not have. Move when Node 22 support is dropped.",
+      "since": "2026-11-03"
+    }
+  },
+  "overrides": {
+    "minimatch": {
+      "version": "11.0.4",
+      "reason": "ESLint 10.14 and typescript-eslint 8.72 depend on minimatch 10, affected by GHSA-g3hv-75wg-m249 (fixed in 11.0.1). Remove the override when they depend on >=11.0.1.",
+      "since": "2026-11-03"
+    }
+  }
+}

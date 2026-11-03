@@ -1,0 +1,14 @@
+{
+  // Builds dist/ for the npm package (Node does not run TypeScript from node_modules). Imports written as "./x.ts"
+  // become "./x.js" (rewriteRelativeImportExtensions).
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "noEmit": false,
+    "allowImportingTsExtensions": false,
+    "rootDir": "src",
+    "outDir": "dist",
+    "sourceMap": false,
+    "declaration": false
+  },
+  "include": ["src"]
+}

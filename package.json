@@ -1,0 +1,64 @@
+{
+  "name": "chrome-store-mcp",
+  "version": "0.1.0",
+  "description": "MCP server for the Chrome Web Store: item status, metrics, ratings and reviews, plus upload, publish and rollback with a human confirmation for every change that reaches users.",
+  "keywords": [
+    "mcp",
+    "model-context-protocol",
+    "chrome-web-store",
+    "chrome-extension",
+    "publish"
+  ],
+  "license": "MIT",
+  "author": "Rayan Bayat",
+  "homepage": "https://github.com/RayanBayat/chrome-store-mcp#readme",
+  "bugs": {
+    "url": "https://github.com/RayanBayat/chrome-store-mcp/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/RayanBayat/chrome-store-mcp.git"
+  },
+  "type": "module",
+  "bin": {
+    "chrome-store-mcp": "dist/index.js"
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "engines": {
+    "node": ">=22.18"
+  },
+  "scripts": {
+    "start": "node src/index.ts",
+    "login": "node src/index.ts login",
+    "build": "tsc -p tsconfig.build.json",
+    "typecheck": "tsc",
+    "lint": "eslint .",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "test": "node --test \"test/**/*.test.ts\"",
+    "test:coverage": "node --test --experimental-test-coverage \"test/**/*.test.ts\"",
+    "verify": "npm run lint && npm run format:check && npm run typecheck && npm test && npm run build",
+    "maintenance": "node scripts/maintenance.ts",
+    "prepack": "npm run build"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "1.32.2",
+    "zod": "4.6.7"
+  },
+  "devDependencies": {
+    "@eslint/js": "10.0.1",
+    "@types/node": "22.20.5",
+    "eslint": "10.14.0",
+    "globals": "17.14.0",
+    "prettier": "3.9.10",
+    "typescript": "6.0.3",
+    "typescript-eslint": "8.72.1"
+  },
+  "overrides": {
+    "minimatch": "11.0.4"
+  }
+}
